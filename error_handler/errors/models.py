@@ -11,6 +11,7 @@ class ErrorType(models.Model):
     error_description = models.TextField()
     notification_description = models.TextField()
     classes = ArrayField(models.CharField(max_length=250, blank=True))
+    solutions = ArrayField(models.TextField())
 
 
 class Error(models.Model):

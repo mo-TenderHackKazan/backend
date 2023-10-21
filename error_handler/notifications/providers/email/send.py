@@ -15,13 +15,12 @@ def send_notification(notification: Notification) -> bool:
         )
     if "email" in notification.meta:
         email = notification.meta["email"]
-        username = ""
     else:
         user = User.objects.get(id=notification.meta["user_id"])
         email = user.email
-        username = user.username
     message = render_to_string(
-        "email/notification.html", {"username": username, "body": notification.body}
+        "email/notification.html",
+        {"title": notification.title, "body": notification.body},
     )
     send_mail(
         notification.title,
