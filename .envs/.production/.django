@@ -1,0 +1,30 @@
+# General
+# ------------------------------------------------------------------------------
+# DJANGO_READ_DOT_ENV_FILE=True
+DJANGO_SETTINGS_MODULE=config.settings.production
+DJANGO_SECRET_KEY=oXn2h4Mw2p57ATdtEiyChpaObmuF0dejxj3ojvye2boiif6PFms1m4PAz95v1q4y
+DJANGO_ADMIN_URL=jcA5nbz1scZiQrsn9kOlZGYe2g9ZT6Jj/
+DJANGO_ALLOWED_HOSTS=.error_handler.ru
+
+# Security
+# ------------------------------------------------------------------------------
+# TIP: better off using DNS, however, redirect is OK too
+DJANGO_SECURE_SSL_REDIRECT=False
+
+
+
+# Gunicorn
+# ------------------------------------------------------------------------------
+WEB_CONCURRENCY=4
+
+
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+
+# Celery
+# ------------------------------------------------------------------------------
+
+# Flower
+CELERY_FLOWER_USER=xXmoBrzhYXSbRinFAnLTOlUcFPyWnAOq
+CELERY_FLOWER_PASSWORD=su2NJcE6ogoeLYf4vc6s48EIZkest7PQBxowrYXoQNhRTdawqUEoqcpjaszHkY6n
