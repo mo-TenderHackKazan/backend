@@ -95,7 +95,7 @@ class RetrieveErrorAPIView(generics.RetrieveAPIView):
     queryset = Error.objects.all()
 
 
-class RetrieveErrorTypeAPIView(generics.RetrieveAPIView):
+class RetrieveErrorTypeAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = FullErrorTypeSerializer
     lookup_field = "pk"
     queryset = ErrorType.objects.all()

@@ -45,6 +45,11 @@ def get_error_name_by_id(id: int) -> str:
     return ". ".join(per)
 
 
+@lru_cache
+def get_has_children_by_id(id: int) -> str:
+    return ErrorType.objects.get(id=id).has_children
+
+
 class ListErrorsSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField(method_name="get_type")
 
@@ -58,8 +63,8 @@ class ListErrorsSerializer(serializers.ModelSerializer):
 
 
 class FullErrorTypeSerializer(serializers.ModelSerializer):
-    entries = serializers.SerializerMethodField()
-    total = serializers.SerializerMethodField()
+    entries = serializers.SerializerMethodField(read_only=True)
+    total = serializers.SerializerMethodField(read_only=True)
 
     @extend_schema_field(serializers.IntegerField)
     def get_total(self, obj):
@@ -73,19 +78,37 @@ class FullErrorTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ErrorType
-        fields = ["id", "total", "name", "resolved", "classes", "solutions", "entries"]
+        fields = [
+            "id",
+            "total",
+            "name",
+            "error_description",
+            "resolved",
+            "solutions",
+            "entries",
+        ]
+        extra_kwargs = {
+            "id": {"read_only": True},
+            "total": {"read_only": True},
+            "entries": {"read_only": True},
+        }
 
 
 class ErrorDateAmountSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField(method_name="get_type")
+    has_children = serializers.SerializerMethodField(method_name="get_has_children")
 
     @extend_schema_field(serializers.CharField)
     def get_type(self, obj):
         return get_error_name_by_id(obj.error_id)
 
+    @extend_schema_field(serializers.BooleanField)
+    def get_has_children(self, obj):
+        return get_has_children_by_id(obj.error_id)
+
     class Meta:
         model = ErrorDateAmount
-        fields = ["error_id", "date", "type", "amount"]
+        fields = ["error_id", "date", "type", "has_children", "amount"]
 
 
 class ResolveErrorNotificationsMethodSerializer(serializers.Serializer):
