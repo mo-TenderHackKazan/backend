@@ -54,9 +54,10 @@ class ErrorSummerySerializer(serializers.ModelSerializer):
 
 @lru_cache
 def get_error_name_by_id(id: int) -> str:
-    e = ErrorType.objects.get(id=id)
-    per = [x.name for x in e.get_parent_list()][::-1] + [e.name]
-    return ". ".join(per)
+    # e = ErrorType.objects.get(id=id)
+    # per = [x.name for x in e.get_parent_list()][::-1] + [e.name]
+    # return ". ".join(per)
+    return ErrorType.objects.get(id=id).name
 
 
 @lru_cache
@@ -77,6 +78,7 @@ class ListErrorsSerializer(serializers.ModelSerializer):
 
 
 class FullErrorTypeSerializer(serializers.ModelSerializer):
+    error_description = serializers.CharField(allow_blank=True)
     entries = serializers.SerializerMethodField(read_only=True)
     total = serializers.SerializerMethodField(read_only=True)
 
@@ -137,7 +139,7 @@ class ResolveErrorNotificationsMethodSerializer(serializers.Serializer):
 
 class ResolveErrorSerializer(serializers.Serializer):
     options = serializers.ListSerializer(child=serializers.CharField())
-    error = serializers.IntegerField()
+    error = serializers.IntegerField(allow_null=True, required=False)
     body = serializers.CharField()
     email = serializers.EmailField(allow_blank=True, allow_null=True, required=False)
 

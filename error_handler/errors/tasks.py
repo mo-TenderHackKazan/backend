@@ -11,10 +11,12 @@ ML_HOST = "http://10.9.67.133:8000/"
 
 @shared_task
 def process_error(body: str):
-    res = requests.post(ML_HOST + "error", json={"log": body})
+    res = requests.post(ML_HOST + "error-simple", json={"log": body})
     if res.status_code != 200:
         raise res.status_code
-    resp = res.json()["label_text"]
+
+    resp = res.json()["label"]
+
     er_t = ErrorType.objects.get_or_create(name=resp)[0]
     Error.objects.create(
         eid=generate_charset(32),

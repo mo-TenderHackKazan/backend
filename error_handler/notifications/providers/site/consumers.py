@@ -1,3 +1,5 @@
+import json
+
 from error_handler.common.channels import BaseConsumer
 
 
@@ -22,6 +24,10 @@ class NotificationsConsumer(BaseConsumer):
 
     async def receive_json(self, content: dict, **kwargs):
         return content
+
+    @classmethod
+    async def encode_json(cls, content):
+        return json.dumps(content, ensure_ascii=False)
 
     async def notification(self, event):
         data = event["data"]

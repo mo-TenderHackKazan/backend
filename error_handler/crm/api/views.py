@@ -75,8 +75,6 @@ class ResolveErrorAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.data
         error = get_object_or_404(ErrorType, id=data["error"])
-        if error.resolved:
-            raise ValidationError("Error already resolved")
         if any([x not in choices for x in data["options"]]):
             raise ValidationError("Incorrect options")
         for option in set(data["options"]):

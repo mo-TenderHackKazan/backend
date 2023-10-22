@@ -11,7 +11,13 @@ SECRET_KEY = env(
     default="SLNDthCIUhrS4QM9kIBMOlwBDuF0Pa2KTVYxRvkyOczENvAuWaLGTkNzvu4U9Mf9",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "10.9.67.36"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "0.0.0.0",
+    "127.0.0.1",
+    "10.9.67.36",
+    "e767-91-199-224-67.ngrok-free.app",
+]
 CORS_ORIGIN_ALLOW_ALL = True
 
 # WhiteNoise
