@@ -11,6 +11,9 @@ class ErrorDateAmount(models.Model):
 
 
 class ErrorSummery(models.Model):
+    parent = models.ForeignKey(
+        "self", related_name="children", null=True, on_delete=models.SET_NULL
+    )
     type = models.ForeignKey(
         "errors.ErrorType", related_name="entries_summery", on_delete=models.CASCADE
     )

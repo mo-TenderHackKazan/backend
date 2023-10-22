@@ -10,7 +10,7 @@ from error_handler.errors.models import Error, ErrorType
 class ErrorTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ErrorType
-        fields = ["id", "name", "resolved", "classes"]
+        fields = ["id", "name", "resolved", "classes", "has_children"]
 
 
 class ErrorSerializer(serializers.ModelSerializer):
@@ -23,16 +23,26 @@ class ErrorSerializer(serializers.ModelSerializer):
 
 class ErrorSummerySerializer(serializers.ModelSerializer):
     type = ErrorTypeSerializer()
+    children = serializers.SerializerMethodField()
     name = serializers.CharField(source="type.name")
+
+    @extend_schema_field(serializers.ListSerializer(child=serializers.JSONField()))
+    def get_children(self, obj):
+        if obj.children is not None:
+            return ErrorSummerySerializer(many=True).to_representation(obj.children)
+        else:
+            return None
 
     class Meta:
         model = ErrorSummery
-        fields = ["name", "type", "first_entry", "last_entry", "amount"]
+        fields = ["name", "type", "first_entry", "last_entry", "amount", "children"]
 
 
 @lru_cache
 def get_error_name_by_id(id: int) -> str:
-    return ErrorType.objects.get(id=id).name
+    e = ErrorType.objects.get(id=id)
+    per = [x.name for x in e.get_parent_list()][::-1] + [e.name]
+    return ". ".join(per)
 
 
 class ListErrorsSerializer(serializers.ModelSerializer):
@@ -75,7 +85,7 @@ class ErrorDateAmountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ErrorDateAmount
-        fields = ["date", "type", "amount"]
+        fields = ["error_id", "date", "type", "amount"]
 
 
 class ResolveErrorNotificationsMethodSerializer(serializers.Serializer):

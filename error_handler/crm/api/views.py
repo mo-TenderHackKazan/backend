@@ -25,7 +25,7 @@ from error_handler.notifications.services import send_notification
 
 class ListErrorSummeryAPIView(generics.ListAPIView):
     serializer_class = ErrorSummerySerializer
-    queryset = ErrorSummery.objects.all().prefetch_related("type")
+    queryset = ErrorSummery.objects.filter(parent__isnull=True).prefetch_related("type")
 
 
 class ListErrorsAPIView(generics.ListAPIView):
@@ -40,6 +40,14 @@ class ListDateErrorsAPIView(generics.ListAPIView):
     serializer_class = ErrorDateAmountSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ErrorDateAmountFilter
+
+    def get_queryset(self):
+        if "parent" in self.request.GET:
+            return ErrorDateAmount.objects.all()
+        return ErrorDateAmount.objects.filter(
+            error_id__in=ErrorType.objects.filter(parent_error__isnull=True)
+        )
+
     queryset = ErrorDateAmount.objects.all()
 
 

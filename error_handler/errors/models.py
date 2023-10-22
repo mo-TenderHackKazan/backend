@@ -1,5 +1,7 @@
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 
 
 class ErrorType(models.Model):
@@ -12,6 +14,19 @@ class ErrorType(models.Model):
     notification_description = models.TextField()
     classes = ArrayField(models.CharField(max_length=250, blank=True))
     solutions = ArrayField(models.TextField())
+
+    @property
+    @extend_schema_field(OpenApiTypes.BOOL)
+    def has_children(self) -> bool:
+        return self.children.exists()
+
+    def get_parent_list(self):
+        res = []
+        obj = self
+        while obj.parent_error:
+            res.append(obj.parent_error)
+            obj = obj.parent_error
+        return res
 
 
 class Error(models.Model):
