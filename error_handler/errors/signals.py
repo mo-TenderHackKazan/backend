@@ -19,6 +19,7 @@ def tag_create(sender, instance: Error, created, **kwargs):
                 s.amount += 1
                 if instance.created > s.last_entry:
                     s.last_entry = instance.created
+                    s.last_error_text = instance.body
                 s.save()
             except (ErrorSummery.DoesNotExist, AttributeError):
                 ...

@@ -19,6 +19,7 @@ class ErrorSummery(models.Model):
     )
     first_entry = models.DateTimeField()
     last_entry = models.DateTimeField()
+    last_error_text = models.TextField(blank=True, null=True)
     amount = models.IntegerField(default=0)
 
     class Meta:

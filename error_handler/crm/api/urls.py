@@ -2,6 +2,7 @@ from django.urls import path
 
 from error_handler.crm.api.views import (
     CountTodayErrorsAPIView,
+    FindErrorsAPIView,
     ListDateErrorsAPIView,
     ListErrorResolveNotificationsMethodsAPIView,
     ListErrorsAPIView,
@@ -19,6 +20,7 @@ urlpatterns = [
     path("errors/date", ListDateErrorsAPIView.as_view()),
     path("errors/today", CountTodayErrorsAPIView.as_view()),
     path("errors/", ListErrorsAPIView.as_view()),
+    path("errors/search/<str:search>", FindErrorsAPIView.as_view()),
     path("errors/<int:pk>", RetrieveErrorAPIView.as_view()),
     path("resolve/methods", ListErrorResolveNotificationsMethodsAPIView.as_view()),
     path("resolve/", ResolveErrorAPIView.as_view()),

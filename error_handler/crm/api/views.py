@@ -33,7 +33,11 @@ class ListErrorsAPIView(generics.ListAPIView):
     serializer_class = ListErrorsSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ErrorFilter
-    queryset = Error.objects.all()
+
+    def get_queryset(self):
+        if "reversed" in self.request.GET and self.request.GET["reversed"] == "true":
+            return Error.objects.all().reverse()
+        return Error.objects.all()
 
 
 class ListDateErrorsAPIView(generics.ListAPIView):
@@ -108,3 +112,16 @@ class CountTodayErrorsAPIView(generics.RetrieveAPIView):
         return Response(
             data={"amount": len(Error.objects.filter(created__date=now().date()))}
         )
+
+
+class FindErrorsAPIView(generics.ListAPIView):
+    pagination_class = BigResultsSetPagination
+    serializer_class = ListErrorsSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = ErrorFilter
+    queryset = Error.objects.none()
+
+    def get_queryset(self):
+        return Error.objects.filter(
+            body__icontains=self.kwargs["search"]
+        ) | Error.objects.filter(body__in=self.kwargs["search"])

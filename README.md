@@ -3,9 +3,22 @@
 
 ## Basic Commands
 
+### Load data(80k logs)
+
+    $ ./manage.py loaddata data.json
+
+or via docker
+
+    $ docker-compose -f local.yml exec django /manage loaddata data.json
+
 ### Runserver
+for local run
 
     $ ./manage.py runserver_plus
+
+for docker
+
+    $ docker-compose -f local.yml up -
 
 ### Type checks
 

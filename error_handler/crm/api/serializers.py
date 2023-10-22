@@ -8,9 +8,15 @@ from error_handler.errors.models import Error, ErrorType
 
 
 class ErrorTypeSerializer(serializers.ModelSerializer):
+    solutions = serializers.SerializerMethodField()
+
+    @extend_schema_field(serializers.IntegerField)
+    def get_solutions(self, obj):
+        return len(obj.solutions)
+
     class Meta:
         model = ErrorType
-        fields = ["id", "name", "resolved", "classes", "has_children"]
+        fields = ["id", "name", "resolved", "solutions", "classes", "has_children"]
 
 
 class ErrorSerializer(serializers.ModelSerializer):
@@ -35,7 +41,15 @@ class ErrorSummerySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ErrorSummery
-        fields = ["name", "type", "first_entry", "last_entry", "amount", "children"]
+        fields = [
+            "name",
+            "type",
+            "first_entry",
+            "last_entry",
+            "last_error_text",
+            "amount",
+            "children",
+        ]
 
 
 @lru_cache
@@ -108,7 +122,13 @@ class ErrorDateAmountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ErrorDateAmount
-        fields = ["error_id", "date", "type", "has_children", "amount"]
+        fields = [
+            "error_id",
+            "date",
+            "type",
+            "has_children",
+            "amount",
+        ]
 
 
 class ResolveErrorNotificationsMethodSerializer(serializers.Serializer):
